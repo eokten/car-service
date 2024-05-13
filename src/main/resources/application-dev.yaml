@@ -1,0 +1,7 @@
+﻿reference-data:
+  engine-types: "Бензиновий,Дизельний"
+  fuel-types:
+    - name: "Бензин"
+      variants: [ "A-92", "A-95", "A-98", "A-100" ]
+    - name: "Дизель"
+      variants: [ "Зимовий", "Літній", "Арктичний" ]

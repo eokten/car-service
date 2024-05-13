@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: "Car Service"
+  profiles:
+    active: [ dev ]
