@@ -3,3 +3,13 @@ spring:
     name: "Car Service"
   profiles:
     active: [ dev ]
+  datasource:
+    url: "jdbc:postgres://localhost:5433"
+    username: "car-service-db-user"
+    password: "car-service-db-password"
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    enabled: true

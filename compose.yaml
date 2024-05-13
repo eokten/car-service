@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: pg-local
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: "car-service-db"
+      POSTGRES_USER: "car-service-db-user"
+      POSTGRES_PASSWORD: "car-service-db-password"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/
+
+volumes:
+  pg_data:
