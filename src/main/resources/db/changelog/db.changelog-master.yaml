@@ -29,3 +29,12 @@ databaseChangeLog:
             column:
               name: "torque"
               type: "integer"
+  - changeSet:
+      id: "1.0.2"
+      author: "eokten"
+      changes:
+        - addColumn:
+            tableName: "cars"
+            column:
+              name: "fuel_type"
+              type: "varchar(16)"
