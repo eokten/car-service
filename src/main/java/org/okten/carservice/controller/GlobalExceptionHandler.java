@@ -2,7 +2,8 @@ package org.okten.carservice.controller;
 
 import org.okten.carservice.dto.ErrorDto;
 import org.okten.carservice.exception.CarOwnerDoesNotExistException;
-import org.okten.carservice.exception.OwnerCannotBeDeletedException;
+import org.okten.carservice.exception.UserAlreadyExistsException;
+import org.okten.carservice.exception.UserCannotBeDeletedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -50,8 +51,18 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler({OwnerCannotBeDeletedException.class, CarOwnerDoesNotExistException.class})
+    @ExceptionHandler({UserCannotBeDeletedException.class, CarOwnerDoesNotExistException.class})
     public ResponseEntity<ErrorDto> handleCarOwnerException(RuntimeException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorDto.builder()
+                        .details(List.of(exception.getMessage()))
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorDto> handlerUserAlreadyExistsException(UserAlreadyExistsException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorDto.builder()

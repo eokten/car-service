@@ -1,1 +1,1 @@
-truncate table cars;
+truncate table cars cascade;

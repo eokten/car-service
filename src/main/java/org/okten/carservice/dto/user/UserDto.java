@@ -1,15 +1,17 @@
-package org.okten.carservice.dto.owner;
+package org.okten.carservice.dto.user;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class OwnerDto {
+public class UserDto {
 
     private Long id;
 
     private String username;
 
     private String email;
+
+    private String role;
 }

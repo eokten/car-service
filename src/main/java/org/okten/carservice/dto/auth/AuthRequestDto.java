@@ -1,18 +1,16 @@
-package org.okten.carservice.dto.owner;
+package org.okten.carservice.dto.auth;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class CreateOwnerRequest {
+public class AuthRequestDto {
 
     @NotBlank
     private String username;
 
     @NotBlank
-    @Email
-    private String email;
+    private String password;
 }

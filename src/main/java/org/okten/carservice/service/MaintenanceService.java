@@ -7,7 +7,7 @@ import org.okten.carservice.dto.mail.MailDto;
 import org.okten.carservice.dto.maintenance.CreateMaintenanceRequest;
 import org.okten.carservice.dto.maintenance.MaintenanceDto;
 import org.okten.carservice.dto.maintenance.UpdateMaintenanceRequest;
-import org.okten.carservice.dto.owner.OwnerDto;
+import org.okten.carservice.dto.user.UserDto;
 import org.okten.carservice.entity.Maintenance;
 import org.okten.carservice.mapper.MaintenanceMapper;
 import org.okten.carservice.repository.MaintenanceRepository;
@@ -25,7 +25,7 @@ public class MaintenanceService {
 
     private final MaintenanceMapper maintenanceMapper;
 
-    private final OwnerService ownerService;
+    private final UserService userService;
 
     private final MailService mailService;
 
@@ -49,10 +49,10 @@ public class MaintenanceService {
         Maintenance maintenance = maintenanceMapper.mapToMaintenanceEntity(createMaintenanceRequest);
         Maintenance savedMaintenance = maintenanceRepository.save(maintenance);
 
-        List<String> allOwners = ownerService
-                .findOwners()
+        List<String> allOwners = userService
+                .findUsers()
                 .stream()
-                .map(OwnerDto::getEmail)
+                .map(UserDto::getEmail)
                 .distinct()
                 .toList();
 

@@ -91,3 +91,32 @@ databaseChangeLog:
             column:
               name: "last_maintenance_timestamp"
               type: "date"
+  - changeSet:
+      id: "1.0.7"
+      author: "eokten"
+      changes:
+        - sqlFile:
+            path: "classpath:/db/changelog/changes/truncate_cars.sql"
+        - sqlFile:
+            path: "classpath:/db/changelog/changes/truncate_owners.sql"
+  - changeSet:
+      id: "1.0.8"
+      author: "eokten"
+      changes:
+        - renameTable:
+            oldTableName: "owners"
+            newTableName: "users"
+        - addColumn:
+            tableName: "users"
+            column:
+              name: "password"
+              type: "text"
+              constraints:
+                nullable: false
+        - addColumn:
+            tableName: "users"
+            column:
+              name: "role"
+              type: "varchar(16)"
+              constraints:
+                nullable: false

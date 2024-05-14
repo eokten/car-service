@@ -4,6 +4,8 @@ import org.okten.carservice.dto.car.CarDto;
 import org.okten.carservice.dto.car.CreateCarRequest;
 import org.okten.carservice.dto.car.UpdateCarRequest;
 import org.okten.carservice.entity.Car;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -33,6 +35,7 @@ public class CarMapper {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #car.owner.username == authentication.principal")
     public Car updateCar(Car car, UpdateCarRequest updateCarRequest) {
         if (updateCarRequest.getModel() != null) {
             car.setModel(updateCarRequest.getModel());

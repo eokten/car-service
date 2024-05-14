@@ -2,15 +2,19 @@ package org.okten.carservice.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.okten.carservice.dto.car.CarDto;
 import org.okten.carservice.dto.car.CreateCarRequest;
 import org.okten.carservice.dto.car.UpdateCarRequest;
 import org.okten.carservice.entity.Car;
-import org.okten.carservice.entity.Owner;
+import org.okten.carservice.entity.User;
 import org.okten.carservice.exception.CarOwnerDoesNotExistException;
 import org.okten.carservice.mapper.CarMapper;
 import org.okten.carservice.repository.CarRepository;
-import org.okten.carservice.repository.OwnerRepository;
+import org.okten.carservice.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,7 +28,7 @@ public class CarService {
 
     private final CarRepository carRepository;
 
-    private final OwnerRepository ownerRepository;
+    private final UserRepository userRepository;
 
     private final CarMapper carMapper;
 
@@ -62,7 +66,7 @@ public class CarService {
 
     @Transactional
     public CarDto createCar(CreateCarRequest createCarRequest) {
-        Optional<Owner> owner = ownerRepository.findByUsername(createCarRequest.getOwner());
+        Optional<User> owner = userRepository.findByUsername(createCarRequest.getOwner());
 
         if (owner.isEmpty()) {
             throw new CarOwnerDoesNotExistException("Owner '%s' does not exist".formatted(createCarRequest.getOwner()));
@@ -79,23 +83,38 @@ public class CarService {
         return carRepository
                 .findById(carId)
                 .map(car -> {
+                    Car updatedCar = carMapper.updateCar(car, updateCarRequest);
+
                     if (updateCarRequest.getOwner() != null) {
-                        Optional<Owner> owner = ownerRepository.findByUsername(updateCarRequest.getOwner());
+                        Optional<User> owner = userRepository.findByUsername(updateCarRequest.getOwner());
 
                         if (owner.isEmpty()) {
-                            throw new CarOwnerDoesNotExistException("Owner '%s' does not exist".formatted(updateCarRequest.getOwner()));
+                            throw new CarOwnerDoesNotExistException("User '%s' does not exist".formatted(updateCarRequest.getOwner()));
                         }
 
-                        car.setOwner(owner.get());
+                        updatedCar.setOwner(owner.get());
                     }
 
-                    return carMapper.updateCar(car, updateCarRequest);
+                    return updatedCar;
                 })
                 .map(carMapper::mapToCarDto)
                 .orElseThrow(() -> new NoSuchElementException("Car '%s' does not exist".formatted(carId)));
     }
 
     public void deleteCar(Long id) {
-        carRepository.deleteById(id);
+        carRepository
+                .findById(id)
+                .ifPresent(car -> {
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+                    boolean isOwner = StringUtils.equalsIgnoreCase(String.valueOf(authentication.getPrincipal()), car.getOwner().getUsername());
+                    boolean isAdmin = authentication.getAuthorities().stream().anyMatch(authority -> StringUtils.equalsIgnoreCase(authority.getAuthority(), "admin"));
+
+                    if (!isAdmin && !isOwner) {
+                        throw new AccessDeniedException("Your can not delete this car");
+                    }
+
+                    carRepository.deleteById(id);
+                });
     }
 }
