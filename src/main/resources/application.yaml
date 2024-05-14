@@ -13,3 +13,22 @@ spring:
       ddl-auto: none
   liquibase:
     enabled: true
+  data:
+    mongodb:
+      uri: "mongodb://car-service-mongodb-user:car-service-mongodb-password@localhost:27018"
+      database: "car_service"
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "eduardokten@gmail.com"
+    password: "eduardokten@gmail.com"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mail:
+  sender:
+    username: "eduardokten@gmail.com"

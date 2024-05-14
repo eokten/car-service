@@ -33,3 +33,4 @@ build/
 .vscode/
 
 pg_data
+mongodb_data

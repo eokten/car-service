@@ -1,7 +1,9 @@
-package org.okten.carservice.dto;
+package org.okten.carservice.dto.car;
 
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -16,4 +18,8 @@ public class CarDto {
     private Integer torque;
 
     private String fuelType;
+
+    private String owner;
+
+    private LocalDate lastMaintenanceTimestamp;
 }

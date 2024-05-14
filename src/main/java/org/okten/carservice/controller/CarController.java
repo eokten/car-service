@@ -2,9 +2,9 @@ package org.okten.carservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.okten.carservice.dto.CarDto;
-import org.okten.carservice.dto.request.CreateCarRequest;
-import org.okten.carservice.dto.request.UpdateCarRequest;
+import org.okten.carservice.dto.car.CarDto;
+import org.okten.carservice.dto.car.CreateCarRequest;
+import org.okten.carservice.dto.car.UpdateCarRequest;
 import org.okten.carservice.service.CarService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,7 +48,7 @@ public class CarController {
     }
 
     @DeleteMapping("/cars/{id}")
-    public ResponseEntity<CarDto> deleteCar(@PathVariable(name = "id") Long carId) {
+    public ResponseEntity<Void> deleteCar(@PathVariable(name = "id") Long carId) {
         carService.deleteCar(carId);
         return ResponseEntity.accepted().build();
     }

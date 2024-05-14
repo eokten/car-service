@@ -38,3 +38,56 @@ databaseChangeLog:
             column:
               name: "fuel_type"
               type: "varchar(16)"
+  - changeSet:
+      id: "1.0.3"
+      author: "eokten"
+      changes:
+        - createSequence:
+            sequenceName: "owners_seq"
+        - createTable:
+            tableName: "owners"
+            columns:
+              - column:
+                  name: "id"
+                  type: "bigint"
+                  constraints:
+                    primaryKey: true
+                  defaultValueSequenceNext: "owners_seq"
+              - column:
+                  name: "username"
+                  type: "varchar(64)"
+              - column:
+                  name: "email"
+                  type: "varchar(128)"
+  - changeSet:
+      id: "1.0.4"
+      author: "eokten"
+      changes:
+        - sqlFile:
+            path: "classpath:/db/changelog/changes/truncate_cars.sql"
+  - changeSet:
+      id: "1.0.5"
+      author: "eokten"
+      changes:
+        - addColumn:
+            tableName: "cars"
+            column:
+              name: "owner_id"
+              type: "bigint"
+              constraints:
+                nullable: false
+        - addForeignKeyConstraint:
+            constraintName: "car_owner_fk"
+            baseTableName: "cars"
+            baseColumnNames: "owner_id"
+            referencedTableName: "owners"
+            referencedColumnNames: "id"
+  - changeSet:
+      id: "1.0.6"
+      author: "eokten"
+      changes:
+        - addColumn:
+            tableName: "cars"
+            column:
+              name: "last_maintenance_timestamp"
+              type: "date"

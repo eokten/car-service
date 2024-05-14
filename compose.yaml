@@ -11,6 +11,28 @@ services:
       POSTGRES_PASSWORD: "car-service-db-password"
     volumes:
       - ./pg_data:/var/lib/postgresql/data/
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-local
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "car-service-mongodb-user"
+      MONGO_INITDB_ROOT_PASSWORD: "car-service-mongodb-password"
+    volumes:
+      - ./mongodb_data:/data/db
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-local
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
 
 volumes:
   pg_data:
+  mongodb_data:

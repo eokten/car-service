@@ -1,4 +1,4 @@
-package org.okten.carservice.dto.request;
+package org.okten.carservice.dto.car;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +16,8 @@ public class UpdateCarRequest {
 
     @ValidFuelType
     private String fuelType;
+
+    private String owner;
+
+    private boolean wasMaintained;
 }

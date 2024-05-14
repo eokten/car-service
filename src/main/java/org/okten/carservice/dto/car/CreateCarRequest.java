@@ -1,4 +1,4 @@
-package org.okten.carservice.dto.request;
+package org.okten.carservice.dto.car;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,4 +27,7 @@ public class CreateCarRequest {
 
     @ValidFuelType(allowNullableValue = false)
     private String fuelType;
+
+    @NotBlank
+    private String owner;
 }
