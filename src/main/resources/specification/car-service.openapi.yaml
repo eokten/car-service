@@ -1,0 +1,165 @@
+openapi: 3.0.3
+
+info:
+  title: Car Service API
+  description: |-
+    OpenAPI specification example based on Car model
+  version: 0.0.1
+  # API-first design
+
+servers:
+  - url: http://localhost:8080/api/v1
+
+tags:
+  - name: car
+
+paths:
+  "/cars":
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Get all cars"
+      description: "Fetch all existing cars"
+      operationId: getCars
+      parameters:
+        - in: query
+          name: minEnginePower
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: maxEnginePower
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          $ref: "#/components/responses/CarList"
+        '400':
+          description: Invalid request
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Create car"
+      operationId: createCar
+      requestBody:
+        $ref: "#/components/requestBodies/Car"
+      responses:
+        '201':
+          $ref: "#/components/responses/Car"
+        '400':
+          description: Invalid request
+        '422':
+          description: Validation exception
+  "/cars/{id}":
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Get specific car"
+      description: "Get car by id"
+      operationId: getCar
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: "Car ID"
+      responses:
+        '200':
+          $ref: "#/components/responses/Car"
+        '400':
+          description: Invalid request
+    put:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Modify specific car"
+      description: "Update only car properties included in the body"
+      operationId: modifyCar
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: "Car ID"
+      requestBody:
+        $ref: "#/components/requestBodies/Car"
+      responses:
+        '201':
+          $ref: "#/components/responses/Car"
+        '400':
+          description: Invalid request
+        '422':
+          description: Validation exception
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 10
+        model:
+          type: string
+          example: "Car Model 1"
+          minLength: 3
+          maxLength: 64
+        enginePower:
+          type: integer
+          format: int32
+          example: 137
+        torque:
+          type: integer
+          format: int32
+          example: 220
+        fuelType:
+          type: string
+        owner:
+          type: string
+        lastMaintenanceTimestamp:
+          type: string
+          format: date
+          readOnly: true
+  responses:
+    Car:
+      description: Car
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Car'
+    CarList:
+      description: Car list
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Car'
+  requestBodies:
+    Car:
+      description: Car to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Car'

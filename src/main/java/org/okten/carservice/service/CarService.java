@@ -3,9 +3,7 @@ package org.okten.carservice.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.okten.carservice.dto.car.CarDto;
-import org.okten.carservice.dto.car.CreateCarRequest;
-import org.okten.carservice.dto.car.UpdateCarRequest;
+import org.okten.carservice.api.model.CarDto;
 import org.okten.carservice.entity.Car;
 import org.okten.carservice.entity.User;
 import org.okten.carservice.exception.CarOwnerDoesNotExistException;
@@ -65,7 +63,7 @@ public class CarService {
     }
 
     @Transactional
-    public CarDto createCar(CreateCarRequest createCarRequest) {
+    public CarDto createCar(CarDto createCarRequest) {
         Optional<User> owner = userRepository.findByUsername(createCarRequest.getOwner());
 
         if (owner.isEmpty()) {
@@ -79,7 +77,7 @@ public class CarService {
     }
 
     @Transactional
-    public CarDto updateCar(Long carId, UpdateCarRequest updateCarRequest) {
+    public CarDto updateCar(Long carId, CarDto updateCarRequest) {
         return carRepository
                 .findById(carId)
                 .map(car -> {
