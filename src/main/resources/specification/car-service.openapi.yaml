@@ -111,6 +111,18 @@ components:
       bearerFormat: JWT
 
   schemas:
+    CarProduct:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Миючий засіб 3000"
+          minLength: 3
+          maxLength: 64
+        price:
+          type: number
+          format: double
+          example: 63999.99
     Car:
       type: object
       properties:
@@ -140,6 +152,10 @@ components:
           type: string
           format: date
           readOnly: true
+        availableProducts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CarProduct"
   responses:
     Car:
       description: Car

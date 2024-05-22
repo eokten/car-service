@@ -1,7 +1,9 @@
 package org.okten.carservice.mapper;
 
 import org.okten.carservice.api.model.CarDto;
+import org.okten.carservice.api.model.CarProductDto;
 import org.okten.carservice.entity.Car;
+import org.okten.productservice.api.ProductDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -50,5 +52,11 @@ public class CarMapper {
         }
 
         return car;
+    }
+
+    public CarProductDto mapToCarProduct(ProductDto productDto) {
+        return new CarProductDto()
+                .name(productDto.getName())
+                .price(productDto.getPrice());
     }
 }

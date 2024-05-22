@@ -30,7 +30,12 @@
         <car-service-openapi-spec.path>
             ${project.basedir}/src/main/resources/specification/car-service.openapi.yaml
         </car-service-openapi-spec.path>
-        <api-package>org.okten.carservice.api</api-package>
+        <car-api-package>org.okten.carservice.api</car-api-package>
+
+        <product-service-openapi-spec.path>
+            ${project.basedir}/src/main/resources/specification/product-service.openapi.yaml
+        </product-service-openapi-spec.path>
+        <product-api-package>org.okten.productservice.api</product-api-package>
     </properties>
 
     <dependencies>
@@ -73,6 +78,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
         <dependency>
@@ -146,7 +156,7 @@
                             <goal>generate</goal>
                         </goals>
 
-                        <id>generate-api</id>
+                        <id>generate-car-api-server</id>
 
                         <configuration>
                             <inputSpec>${car-service-openapi-spec.path}</inputSpec>
@@ -166,12 +176,57 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <useBeanValidation>true</useBeanValidation>
                                 <performBeanValidation>true</performBeanValidation>
-                                <modelPackage>${api-package}.model</modelPackage>
-                                <apiPackage>${api-package}.controller</apiPackage>
+                                <modelPackage>${car-api-package}.model</modelPackage>
+                                <apiPackage>${car-api-package}.controller</apiPackage>
                                 <useJakartaEe>true</useJakartaEe> <!-- important for Spring Boot 3.x -->
                                 <useSpringBoot3>true</useSpringBoot3> <!-- important for Spring Boot 3.x -->
                                 <sourceFolder>/src/main/java</sourceFolder>
                                 <implFolder>/src/main/java</implFolder>
+                                <serializableModel>true</serializableModel>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>generate-product-api-client</id>
+
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+
+                        <configuration>
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <inputSpec>
+                                ${product-service-openapi-spec.path}
+                            </inputSpec>
+
+                            <skipIfSpecIsUnchanged>true</skipIfSpecIsUnchanged>
+                            <generateApis>true</generateApis>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModels>true</generateModels>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <output>${project.build.directory}/generated-sources</output>
+                            <modelPackage>${product-api-package}</modelPackage>
+                            <apiPackage>${product-api-package}</apiPackage>
+                            <modelNameSuffix>Dto</modelNameSuffix>
+
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <oas3>true</oas3>
+
+                                <sourceFolder>/src/main/java</sourceFolder>
+                                <dateLibrary>java8</dateLibrary>
+                                <useBeanValidation>false</useBeanValidation>
+                                <performBeanValidation>false</performBeanValidation>
+                                <interfaceOnly>false</interfaceOnly>
+                                <useOptional>false</useOptional>
                                 <serializableModel>true</serializableModel>
                             </configOptions>
                         </configuration>

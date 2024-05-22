@@ -4,12 +4,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.okten.carservice.api.model.CarDto;
+import org.okten.carservice.api.model.CarProductDto;
 import org.okten.carservice.entity.Car;
 import org.okten.carservice.entity.User;
 import org.okten.carservice.exception.CarOwnerDoesNotExistException;
 import org.okten.carservice.mapper.CarMapper;
 import org.okten.carservice.repository.CarRepository;
 import org.okten.carservice.repository.UserRepository;
+import org.okten.productservice.api.ProductApi;
+import org.okten.productservice.api.ProductDto;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +33,8 @@ public class CarService {
 
     private final CarMapper carMapper;
 
+    private final ProductApi productApi;
+
     public List<CarDto> findCars(Integer minEnginePower, Integer maxEnginePower) {
         List<Car> cars;
 
@@ -46,6 +51,7 @@ public class CarService {
         return cars
                 .stream()
                 .map(carMapper::mapToCarDto)
+                .map(this::enrichWithAvailableProducts)
                 .toList();
     }
 
@@ -59,7 +65,8 @@ public class CarService {
     public Optional<CarDto> findCar(Long id) {
         return carRepository
                 .findById(id)
-                .map(carMapper::mapToCarDto);
+                .map(carMapper::mapToCarDto)
+                .map(this::enrichWithAvailableProducts);
     }
 
     @Transactional
@@ -114,5 +121,16 @@ public class CarService {
 
                     carRepository.deleteById(id);
                 });
+    }
+
+    private CarDto enrichWithAvailableProducts(CarDto source) {
+        List<CarProductDto> availableProducts = productApi
+                .getProducts("Автотовари")
+                .stream()
+                .filter(productDto -> productDto.getStatus() == ProductDto.StatusEnum.IN_STOCK)
+                .map(carMapper::mapToCarProduct)
+                .toList();
+        source.setAvailableProducts(availableProducts);
+        return source;
     }
 }
