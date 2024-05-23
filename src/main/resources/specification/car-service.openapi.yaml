@@ -4,7 +4,7 @@ info:
   title: Car Service API
   description: |-
     OpenAPI specification example based on Car model
-  version: 0.0.1
+  version: 0.0.2
   # API-first design
 
 servers:
@@ -12,8 +12,23 @@ servers:
 
 tags:
   - name: car
+  - name: comment
 
 paths:
+  "/comments":
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - comment
+      summary: "Get all comments"
+      description: "Fetch all existing car comments"
+      operationId: getComments
+      responses:
+        '200':
+          $ref: "#/components/responses/CommentList"
+        '400':
+          description: Invalid request
   "/cars":
     get:
       security:
@@ -156,6 +171,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/CarProduct"
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 10
+        author:
+          type: string
+          example: "Ruben Hauck"
+          minLength: 3
+          maxLength: 64
+        text:
+          type: string
+          example: "Lorem ipsum"
   responses:
     Car:
       description: Car
@@ -171,6 +202,14 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Car'
+    CommentList:
+      description: Car list
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Comment'
   requestBodies:
     Car:
       description: Car to be created
