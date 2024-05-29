@@ -41,6 +41,19 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+  cloud:
+    function:
+      definition: on-product-created
+    stream:
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+      bindings:
+        on-product-created-in-0:
+          destination: product-created-events
+          group: my-consumer-group
+          content-type: application/x-java-object;type=org.example.event.model.ProductCreatedPayload
 
 server:
   port: 8081
