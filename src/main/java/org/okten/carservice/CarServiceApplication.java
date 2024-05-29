@@ -3,7 +3,9 @@ package org.okten.carservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(
+		scanBasePackages = {"org.okten.carservice", "org.example.event"}
+)
 public class CarServiceApplication {
 
 	public static void main(String[] args) {
